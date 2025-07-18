@@ -13,7 +13,7 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.settimeout(1)
 sock.bind(('', PORT))
 
-players = []
+players = set()
 errors = set()
 
 while True:
@@ -22,7 +22,8 @@ while True:
 	sock.sendto(msg, ("<broadcast>", 9999))
 	try:
 		data, addr = sock.recvfrom(1024)
-		players.append(addr)
+		if addr not in players:
+			players.add(addr)
 		sock.sendto(connected, addr)
 	except TimeoutError:
 		pass
