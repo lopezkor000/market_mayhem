@@ -1,4 +1,4 @@
-import socket, json, time, os
+import socket, json, os
 
 PORT = 8989
 
@@ -18,7 +18,7 @@ errors = set()
 
 while True:
 	os.system('cls')
-	print(f"Waiting for players... ({len(players)})", players, errors)
+	print(f"Waiting for players... ({len(players)})", players, errors if errors else "")
 	sock.sendto(msg, ("<broadcast>", 9999))
 	try:
 		data, addr = sock.recvfrom(1024)
