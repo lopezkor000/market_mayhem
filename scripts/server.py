@@ -1,4 +1,4 @@
-import socket, json, os
+import socket, json
 
 PORT = 8989
 
@@ -13,23 +13,26 @@ sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 sock.settimeout(1)
 sock.bind(('', PORT))
 
-players = set()
+
+with open('./public/data.json', 'r') as file:
+	jsonData = json.load(file)
+
+players = []
 errors = set()
 
 while True:
-	os.system('cls')
-	print(f"Waiting for players... ({len(players)})", players, errors if errors else "")
 	sock.sendto(msg, ("<broadcast>", 9999))
 	try:
 		data, addr = sock.recvfrom(1024)
 		if addr not in players:
-			players.add(addr)
+			players.append(addr[0])
+			jsonData['players'] = players
 		sock.sendto(connected, addr)
 	except TimeoutError:
 		pass
 	except socket.error as e:
 		errors.add(e)
+	with open('./public/data.json', 'w') as file:
+		json.dump(jsonData, file)
 	if len(players) > 1:
 		break
-
-print('Succesfully terminated')

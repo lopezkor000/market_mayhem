@@ -7,18 +7,16 @@ export default function Host() {
 
   useEffect(() => {
     try {
-      const id = setInterval(
-        () =>
-          fetch("http://localhost:3000/data.json")
-            .then((res) => res.json())
-            .then((data) => {
-              setPlayers(data["players"]);
-            }),
-        1000
-      );
+      const id = setInterval(() => {
+        fetch("/data.json")
+          .then((res) => res.json())
+          .then((data) => {
+            setPlayers(data["players"]);
+          });
+      }, 3000);
       return () => clearInterval(id);
     } catch {
-      console.log("failed");
+      console.log("Cannot fetch data");
     }
   }, []);
 
@@ -39,6 +37,14 @@ export default function Host() {
       <div className="self-center flex gap-3">
         <p>Joined: </p>
         <p>{players.join(", ")}</p>
+      </div>
+      <div>
+        <button
+          onClick={() => fetch("/api/game", { method: "DELETE" })}
+          className="bg-blue-500 rounded p-2 text-white hover:cursor-pointer hover:bg-blue-600"
+        >
+          DELETE HOST
+        </button>
       </div>
     </div>
   );
