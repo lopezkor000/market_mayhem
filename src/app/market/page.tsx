@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 interface MarketProps {
   name: string;
   ticker: string;
@@ -212,6 +216,44 @@ const market: MarketProps[] = [
   },
 ];
 
+interface StockProps {
+  stock: MarketProps;
+  i: number;
+}
+
+function Stock({ stock, i }: StockProps) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <tr
+      key={stock.ticker}
+      id={stock.ticker}
+      className={`${i % 2 ? "bg-blue-600/50" : "bg-blue-300/50"}`}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <td className="text-left py-2 px-3">{stock.name}</td>
+      <td className="font-bold">{stock.ticker}</td>
+      <td>{stock.dividend}</td>
+      <td>{stock.starting}</td>
+      <td>{stock.low}</td>
+      <td>{stock.med}</td>
+      <td>{stock.high}</td>
+      <td className="font-bold">{stock.current}</td>
+      <td className={hover ? "" : "hidden"}>
+        <div>
+          <button className="text-3xl bg-green-500 rounded font-bold hover:text-white p-3 cursor-pointer">
+            Buy
+          </button>
+          <button className="text-3xl bg-red-500 rounded font-bold hover:text-white p-3 cursor-pointer">
+            Sell
+          </button>
+        </div>
+      </td>
+    </tr>
+  );
+}
+
 export default function Market() {
   return (
     <div className="flex justify-center mb-12">
@@ -230,20 +272,7 @@ export default function Market() {
         </thead>
         <tbody>
           {market.map((stock, i) => (
-            <tr
-              key={stock.ticker}
-              id={stock.ticker}
-              className={`${i % 2 ? "bg-blue-600/50" : "bg-blue-300/50"}`}
-            >
-              <td className="text-left py-2 px-3">{stock.name}</td>
-              <td className="font-bold">{stock.ticker}</td>
-              <td>{stock.dividend}</td>
-              <td>{stock.starting}</td>
-              <td>{stock.low}</td>
-              <td>{stock.med}</td>
-              <td>{stock.high}</td>
-              <td className="font-bold">{stock.current}</td>
-            </tr>
+            <Stock key={i} stock={stock} i={i} />
           ))}
         </tbody>
       </table>
