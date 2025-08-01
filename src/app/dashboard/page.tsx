@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 function Sell() {
   interface Stock {
     ticker: string;
@@ -92,14 +96,43 @@ function Buy() {
   );
 }
 
-function Holding() {
-  interface Stock {
-    ticker: string;
-    name: string;
-    quantity: number;
-    price: number;
-  }
+interface Stock {
+  ticker: string;
+  name: string;
+  quantity: number;
+  price: number;
+}
 
+interface StockProps {
+  stock: Stock;
+  i: number;
+}
+
+function StockHolding({ stock, i }: StockProps) {
+  const [hover, setHover] = useState(false);
+
+  return (
+    <tr
+      key={stock.ticker}
+      id={stock.ticker}
+      className={`${i % 2 ? "bg-blue-600/50" : "bg-blue-300/50"}`}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <td>{stock.name}</td>
+      <td>{stock.ticker}</td>
+      <td>{stock.quantity}</td>
+      <td>${stock.price}</td>
+      <td className={hover ? "" : "hidden"}>
+        <button className="text-md bg-red-500 rounded font-bold hover:text-white p-3 cursor-pointer">
+          Sell
+        </button>
+      </td>
+    </tr>
+  );
+}
+
+function Holding() {
   const stocks: Stock[] = [
     { name: "a", ticker: "a", quantity: 0, price: 4 },
     { name: "b", ticker: "b", quantity: 1, price: 3 },
@@ -122,16 +155,7 @@ function Holding() {
         </thead>
         <tbody>
           {stocks.map((stock, i) => (
-            <tr
-              key={stock.ticker}
-              id={stock.ticker}
-              className={`${i % 2 ? "bg-blue-600/50" : "bg-blue-300/50"}`}
-            >
-              <td>{stock.name}</td>
-              <td>{stock.ticker}</td>
-              <td>{stock.quantity}</td>
-              <td>${stock.price}</td>
-            </tr>
+            <StockHolding key={i} stock={stock} i={i} />
           ))}
         </tbody>
       </table>
@@ -150,12 +174,12 @@ export default function Market() {
           <strong>Net Worth:</strong> ${500}
         </h1>
       </div>
+      <div className="flex justify-center">
+        <Holding />
+      </div>
       <div className="flex gap-12 justify-center">
         <Buy />
         <Sell />
-      </div>
-      <div className="flex justify-center">
-        <Holding />
       </div>
     </div>
   );
