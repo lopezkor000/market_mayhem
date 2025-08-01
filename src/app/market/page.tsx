@@ -241,14 +241,9 @@ function Stock({ stock, i }: StockProps) {
       <td>{stock.high}</td>
       <td className="font-bold">{stock.current}</td>
       <td className={hover ? "" : "hidden"}>
-        <div>
-          <button className="text-3xl bg-green-500 rounded font-bold hover:text-white p-3 cursor-pointer">
-            Buy
-          </button>
-          <button className="text-3xl bg-red-500 rounded font-bold hover:text-white p-3 cursor-pointer">
-            Sell
-          </button>
-        </div>
+        <button className="text-3xl bg-green-500 rounded font-bold hover:text-white p-3 cursor-pointer">
+          Buy
+        </button>
       </td>
     </tr>
   );
