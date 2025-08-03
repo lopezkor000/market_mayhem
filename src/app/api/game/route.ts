@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { spawn, ChildProcess } from "child_process";
+import fs from "fs";
 
 let pyProcess: ChildProcess | null = null;
 
@@ -26,6 +27,28 @@ export function DELETE() {
   if (pyProcess && !pyProcess.killed && pyProcess.pid) {
     process.kill(pyProcess.pid);
     pyProcess = null;
+
+    fs.readFile("./public/data.json", (readErr, data) => {
+      if (readErr) {
+        console.error(readErr);
+        return NextResponse.json({ error: readErr }, { status: 500 });
+      }
+
+      const gameData = JSON.parse(data.toString());
+      gameData.players = [];
+
+      fs.writeFile(
+        "./public/data.json",
+        JSON.stringify(gameData),
+        (writeErr) => {
+          if (writeErr) {
+            console.error(writeErr);
+            return NextResponse.json({ error: writeErr }, { status: 500 });
+          }
+        }
+      );
+    });
+
     return NextResponse.json({ message: "Host stopped" }, { status: 200 });
   }
   return NextResponse.json(

@@ -1,9 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Host() {
   const [players, setPlayers] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     try {
@@ -40,7 +42,13 @@ export default function Host() {
       </div>
       <div>
         <button
-          onClick={() => fetch("/api/game", { method: "DELETE" })}
+          onClick={() =>
+            fetch("/api/game", { method: "DELETE" }).then((res) => {
+              if (!res.ok) {
+                res.json().then((data) => console.log(res.status, data));
+              } else router.push("/");
+            })
+          }
           className="bg-blue-500 rounded p-2 text-white hover:cursor-pointer hover:bg-blue-600"
         >
           DELETE HOST
