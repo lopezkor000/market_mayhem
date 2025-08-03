@@ -111,6 +111,11 @@ interface StockProps {
 function StockHolding({ stock, i }: StockProps) {
   const [hover, setHover] = useState(false);
 
+  function sell() {
+    const stockNode = document.getElementById(stock.ticker);
+    if (stockNode) stockNode.remove();
+  }
+
   return (
     <tr
       key={stock.ticker}
@@ -124,7 +129,10 @@ function StockHolding({ stock, i }: StockProps) {
       <td>{stock.quantity}</td>
       <td>${stock.price}</td>
       <td className={hover ? "" : "hidden"}>
-        <button className="text-md bg-red-500 rounded font-bold hover:text-white p-3 cursor-pointer">
+        <button
+          className="text-md bg-red-500 rounded font-bold hover:text-white p-3 cursor-pointer"
+          onClick={sell}
+        >
           Sell
         </button>
       </td>
